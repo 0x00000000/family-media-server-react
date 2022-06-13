@@ -1,6 +1,11 @@
-const BASE_URL = 'http://test.local/media-server/';
+const BASE_URL = 'http://test.saitik.net/media-server/';
 
-const MEDIA_TYPES ={
+const URL_POSTFIXES = {
+    VIDEO: 'video/',
+    PHOTO: 'photo/',
+}
+
+const MEDIA_TYPES = {
     VIDEO: 'media-type-video',
     PHOTO: 'media-type-photo',
 };
@@ -12,6 +17,7 @@ const PAGES = {
 
 export {
     BASE_URL,
+    URL_POSTFIXES,
     MEDIA_TYPES,
     PAGES,
 };

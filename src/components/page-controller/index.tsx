@@ -1,19 +1,20 @@
 import React from 'react';
 
 import CatalogPage from "../catalog-page";
-import VideoPage from "../video-page/video-page";
+import VideoPage from "../video-page";
 
-import {VideosList} from '../../api/videosList';
+import {PlaylistData} from '../../api/playlist';
 
 import {PAGES} from '../../constants';
 
 type Props = {
-    videosList: VideosList;
+    playlistDataList: PlaylistData[];
 };
 
 type State = {
     page: string;
-    playlist: string;
+    playlistIndex: number;
+    videoIndex: number;
 };
 
 class PageController extends React.Component<Props, State> {
@@ -23,7 +24,8 @@ class PageController extends React.Component<Props, State> {
 
         this.state = {
             page: PAGES.CATALOG,
-            playlist: '',
+            playlistIndex: 0,
+            videoIndex: 0,
         }
     }
 
@@ -31,23 +33,18 @@ class PageController extends React.Component<Props, State> {
         this.setState(state => ({
             ...state,
             page: PAGES.CATALOG,
-            playlist: '',
-        }));
-    }
-
-    onSetPageVideo() {
-        this.setState(state => ({
-            ...state,
-            page: PAGES.VIDEO,
-            playlist: '',
         }));
     }
 
     onSetPlaylist(playlist: string) {
+        let playlistIndex: number = this.props.playlistDataList.findIndex(
+            (playlistData: PlaylistData, index: number) => (playlistData.playlist === playlist)
+        );
         this.setState(state => ({
             ...state,
             page: PAGES.VIDEO,
-            playlist: playlist,
+            playlistIndex: playlistIndex,
+            videoIndex: 0,
         }))
     }
 
@@ -55,15 +52,13 @@ class PageController extends React.Component<Props, State> {
         return <>
             {this.state.page === PAGES.CATALOG && (
                 <CatalogPage
-                    videosList={this.props.videosList}
-                    onSetPageVideo={() => this.onSetPageVideo()}
+                    playlistDataList={this.props.playlistDataList}
                     onSetPlaylist={(playlist: string) => this.onSetPlaylist(playlist)}
                 />
             )}
             {this.state.page === PAGES.VIDEO && (
                 <VideoPage
-                    videosList={this.props.videosList}
-                    playlist={this.state.playlist}
+                    playlistData={this.props.playlistDataList[this.state.playlistIndex]}
                     onSetPageCatalog={() => this.onSetPageCatalog()}
                 />
             )}
@@ -71,4 +66,6 @@ class PageController extends React.Component<Props, State> {
     }
 }
 
+/*
+*/
 export default PageController;

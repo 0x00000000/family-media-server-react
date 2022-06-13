@@ -1,10 +1,9 @@
 import React from 'react';
 
-import {VideosList} from '../../api/videosList';
+import {PlaylistData} from '../../api/playlist';
 
 type Props = {
-    videosList: VideosList;
-    onSetPageVideo: () => void;
+    playlistDataList: PlaylistData[];
     onSetPlaylist: (playlist: string) => void;
 };
 
@@ -16,11 +15,10 @@ class CatalogPage extends React.Component<Props, State> {
     }
 
     render() {
-        console.log('this.props.videosList', this.props.videosList);
         return <>
-            <h1>Home</h1>
+            <h1>Select playlist</h1>
             <div className="catalog-list">
-                {this.props.videosList.map(
+                {this.props.playlistDataList.map(
                     (value, key) => (
                         <div
                             key={key}
@@ -31,7 +29,8 @@ class CatalogPage extends React.Component<Props, State> {
                         </div>
                     )
                 )}
-            </div>        </>;
+            </div>
+        </>;
     }
 }
 

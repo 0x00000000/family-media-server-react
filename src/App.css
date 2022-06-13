@@ -1,11 +1,20 @@
-div.grayLink {
-    margin: 2px;
-    padding: 5px;
+div.grayLink,
+div.grayButton {
+    margin: 5px;
+    padding: 10px;
     cursor: pointer;
     background: #EEE;
 }
 
-div.grayLink:hover {
+div.grayButton {
+    display: inline-block;
+    min-width: 150px;
+    height: 20px;
+    text-align: center;
+}
+
+div.grayLink:hover,
+div.grayButton:hover {
     background: #AAA;
 }
 

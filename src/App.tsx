@@ -1,14 +1,14 @@
 import React from 'react';
 import './App.css';
 
-import { loadVideosList, VideosList } from './api/videosList';
+import { loadPlaylistDataList, PlaylistData } from './api/playlist';
 
 import PageController from "./components/page-controller";
 
 type Props = {};
 
 type State = {
-    videosList: VideosList;
+    playlistDataList: PlaylistData[];
 };
 
 class App extends React.Component<Props, State> {
@@ -17,22 +17,21 @@ class App extends React.Component<Props, State> {
         super(props);
 
         this.state = {
-            videosList: [],
+            playlistDataList: [],
         };
     }
 
     componentDidMount() {
-        this.loadVideosList();
+        this.loadPlaylistDataList();
     }
 
-    loadVideosList = async() => {
+    loadPlaylistDataList = async() => {
         try {
-            const videosList: VideosList = await loadVideosList();
+            const playlistDataList: PlaylistData[] = await loadPlaylistDataList();
             this.setState(state => ({
                 ...state,
-                videosList: videosList,
+                playlistDataList: playlistDataList,
             }));
-            console.log('videosListData', videosList);
         } catch (err) {
             console.log('Error', err);
         } finally {
@@ -43,7 +42,7 @@ class App extends React.Component<Props, State> {
         return (
             <div className="App">
                 <PageController
-                    videosList={this.state.videosList}
+                    playlistDataList={this.state.playlistDataList}
                 />
             </div>
         );
