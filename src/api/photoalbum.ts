@@ -1,18 +1,18 @@
 import axios from 'axios';
 import { BASE_URL } from '../constants';
 
-const ENDPOINT = 'playlistData.php';
+const ENDPOINT = 'photoalbumData.php';
 
-export type PlaylistData = {
-    playlist: string;
-    videos: Array<string>;
+export type PhotoalbumData = {
+    photoalbum: string;
+    photos: Array<string>;
 }
 
 type PlaylistDataResponse = {
-    data: PlaylistData[];
+    data: PhotoalbumData[];
 }
 
-export const loadPlaylistDataList = (): Promise<PlaylistData[]> =>
+export const loadPhotoalbumDataList = (): Promise<PhotoalbumData[]> =>
     axios
         .get(BASE_URL + ENDPOINT)
         .then((res: PlaylistDataResponse) => res.data)

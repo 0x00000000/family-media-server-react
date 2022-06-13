@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 
 import { loadPlaylistDataList, PlaylistData } from './api/playlist';
+import { loadPhotoalbumDataList, PhotoalbumData } from './api/photoalbum';
 
 import PageController from "./components/page-controller";
 
@@ -9,6 +10,7 @@ type Props = {};
 
 type State = {
     playlistDataList: PlaylistData[];
+    photoalbumDataList: PhotoalbumData[];
 };
 
 class App extends React.Component<Props, State> {
@@ -18,11 +20,13 @@ class App extends React.Component<Props, State> {
 
         this.state = {
             playlistDataList: [],
+            photoalbumDataList: [],
         };
     }
 
     componentDidMount() {
         this.loadPlaylistDataList();
+        this.loadPhotoalbumDataList();
     }
 
     loadPlaylistDataList = async() => {
@@ -38,11 +42,25 @@ class App extends React.Component<Props, State> {
         }
     }
 
+    loadPhotoalbumDataList = async() => {
+        try {
+            const photoalbumDataList: PhotoalbumData[] = await loadPhotoalbumDataList();
+            this.setState(state => ({
+                ...state,
+                photoalbumDataList: photoalbumDataList,
+            }));
+        } catch (err) {
+            console.log('Error', err);
+        } finally {
+        }
+    }
+
     render() {
         return (
             <div className="App">
                 <PageController
                     playlistDataList={this.state.playlistDataList}
+                    photoalbumDataList={this.state.photoalbumDataList}
                 />
             </div>
         );

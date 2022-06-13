@@ -13,6 +13,7 @@ const MEDIA_TYPES = {
 const PAGES = {
     CATALOG: 'page-cagalog',
     VIDEO: 'page-video',
+    PHOTO: 'page-photo',
 };
 
 export {

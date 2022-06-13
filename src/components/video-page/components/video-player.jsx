@@ -5,7 +5,6 @@ import 'video.js/dist/video-js.css';
 
 class VideoPlayer extends React.Component {
     componentDidMount() {
-        console.log('componentDidMount');
         // Make sure Video.js player is only initialized once
         if (! this.player) {
             this.player = videojs(this.videoNode, this.props.options, () => {

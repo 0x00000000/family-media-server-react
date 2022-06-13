@@ -1,9 +1,9 @@
 import React from 'react';
-import {PlaylistData} from "../../api/playlist";
+import { PlaylistData } from "../../api/playlist";
 import VideoPlayer from './components/video-player';
 
-import {BASE_URL, URL_POSTFIXES} from '../../constants';
-import {MEDIA_TYPES} from '../../constants';
+import { BASE_URL, URL_POSTFIXES } from '../../constants';
+import { MEDIA_TYPES } from '../../constants';
 import MediaStatisticModel from '../../models/media-statistic-model'
 
 type Props = {
