@@ -1,4 +1,4 @@
-const BASE_URL = 'http://test.saitik.net/media-server/';
+const BASE_URL = 'http://example.com/media-server/';
 
 const URL_POSTFIXES = {
     VIDEO: 'video/',

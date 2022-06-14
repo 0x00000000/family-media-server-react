@@ -14,13 +14,13 @@
             ];
             if (is_dir($baseDirectory . $ds . $photosDirectory)) {
                 $filesList = scandir($baseDirectory . $ds . $photosDirectory);
-                foreach ($filesList as $photoFile) {
+                foreach ($filesList as $filename) {
                     if (
-                        strripos($photoFile, '.jpg') !== false
-                        || strripos($photoFile, '.jpeg') !== false
-                        || strripos($photoFile, '.png') !== false
+                        strripos($filename, '.jpg') !== false
+                        || strripos($filename, '.jpeg') !== false
+                        || strripos($filename, '.png') !== false
                     ) {
-                        $photoItem['photos'][] = $photoFile;
+                        $photoItem['photos'][] = $filename;
                     }
                 }
             }

@@ -6,6 +6,9 @@ const ENDPOINT = 'playlistData.php';
 export type PlaylistData = {
     playlist: string;
     videos: Array<string>;
+    options?: {
+        random?: boolean;
+    }
 }
 
 type PlaylistDataResponse = {

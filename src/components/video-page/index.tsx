@@ -6,6 +6,8 @@ import { BASE_URL, URL_POSTFIXES } from '../../constants';
 import { MEDIA_TYPES } from '../../constants';
 import MediaStatisticModel from '../../models/media-statistic-model'
 
+import playlistFinished from '../../api/playlistFinished';
+
 type Props = {
     playlistData: PlaylistData;
     onSetPageCatalog: () => void;
@@ -13,6 +15,7 @@ type Props = {
 
 type State = {
     videoIndex: number,
+    started: boolean,
 };
 
 class VideoPage extends React.Component<Props, State> {
@@ -43,13 +46,18 @@ class VideoPage extends React.Component<Props, State> {
         this._videoJsOptions.sources[0].src = this.getVideoUrl(videoIndex);
         this.state = {
             videoIndex: videoIndex,
+            started: false,
         };
     }
 
     getVideoUrl(videoIndex: number) {
-        let filename: string = this.props.playlistData.videos[videoIndex];
-        let directory: string = this.props.playlistData.playlist;
-        return BASE_URL + URL_POSTFIXES.VIDEO + directory + '/' + filename;
+        if (videoIndex < this.props.playlistData.videos.length) {
+            let filename: string = this.props.playlistData.videos[videoIndex];
+            let directory: string = this.props.playlistData.playlist;
+            return BASE_URL + URL_POSTFIXES.VIDEO + directory + '/' + filename;
+        } else {
+            return '';
+        }
     }
 
     getUnwatchedFileIndex(playlistData: PlaylistData): number {
@@ -57,11 +65,25 @@ class VideoPage extends React.Component<Props, State> {
         let index: number = playlistData.videos.findIndex(
             (filename: string) => (watchedFilename === filename)
         );
-        index++;
-        if (index >= playlistData.videos.length) {
-            index = 0;
-        }
+        index = this.getNextIndex(index, playlistData);
+
         return index;
+    }
+
+    getNextIndex(index: number, playlistData: PlaylistData): number {
+        if (playlistData.options && playlistData.options.random) {
+            let newIndex = Math.floor(Math.random() * (playlistData.videos.length));
+            if (newIndex === index) {
+                newIndex++;
+                if (newIndex === playlistData.videos.length) {
+                    newIndex = 0;
+                }
+            }
+            return newIndex;
+        } else {
+            return index + 1;
+        }
+
     }
 
     setWatchedFile(directory: string, filename: string): void {
@@ -72,32 +94,37 @@ class VideoPage extends React.Component<Props, State> {
         this._statistic.addWatchedFile(directory, '');
     }
 
-    startWatchingFile(directory: string, index: number) {
-        if (index < 0 || index >= this.props.playlistData.videos.length) {
-            index = 0;
-        }
-        this.setState(state => ({
-            ...this.state,
-            videoIndex: index,
-        }));
-        this.setWatchedFile(directory, this.props.playlistData.videos[index]);
-        if (this._player) {
-            // @ts-ignore: Object is possibly 'null'.
-            this._player.src([{src: this.getVideoUrl(index), type: 'video/mp4',},]);
-            // @ts-ignore: Object is possibly 'null'.
-            this._player.autoplay(true);
-            // @ts-ignore: Object is possibly 'null'.
-            this._player.controls(true);
-            // @ts-ignore: Object is possibly 'null'.
-            this._player.play();
+    startWatchingFile(index: number, playlistData: PlaylistData) {
+        if (index < playlistData.videos.length) {
+            this.setState(state => ({
+                ...state,
+                videoIndex: index,
+            }));
+            this.setWatchedFile(playlistData.playlist, playlistData.videos[index]);
+            if (this._player) {
+                // @ts-ignore: Object is possibly 'null'.
+                this._player.src([{src: this.getVideoUrl(index), type: 'video/mp4',},]);
+                // @ts-ignore: Object is possibly 'null'.
+                this._player.autoplay(true);
+                // @ts-ignore: Object is possibly 'null'.
+                this._player.controls(true);
+                // @ts-ignore: Object is possibly 'null'.
+                this._player.play();
+            }
+
+            if (index === playlistData.videos.length - 1) {
+                playlistFinished(playlistData.playlist);
+            }
+
         }
     }
 
     restartWatching(directory: string) {
         let index: number = 0;
         this.setState(state => ({
-            ...this.state,
+            ...state,
             videoIndex: index,
+            started: false,
         }));
         if (this._player) {
             // @ts-ignore: Object is possibly 'null'.
@@ -114,33 +141,29 @@ class VideoPage extends React.Component<Props, State> {
         let directory: string = this.props.playlistData.playlist;
         if (this.state.videoIndex === 0) {
             this.clearWatchedFile(directory);
-        } else {
+        } else if (this.state.videoIndex < this.props.playlistData.videos.length) {
             let prevIndex: number = this.state.videoIndex - 1;
             this.setWatchedFile(directory, this.props.playlistData.videos[prevIndex]);
         }
     }
 
     onPlayThis(): void {
-        this.startWatchingFile(this.props.playlistData.playlist, this.state.videoIndex);
-    }
-
-    onPlayNext(): void {
-        let nextIndex: number = this.state.videoIndex + 1;
-
-        if (nextIndex < this.props.playlistData.videos.length) {
-            this.startWatchingFile(this.props.playlistData.playlist, nextIndex);
-        } else {
-            this.restartWatching(this.props.playlistData.playlist);
+        if (! this.state.started) {
+            this.setState(state => ({
+                ...state,
+                started: true,
+            }));
+            this.startWatchingFile(this.state.videoIndex, this.props.playlistData);
         }
     }
 
-    onPlayPrev(): void {
-        let prevIndex: number = this.state.videoIndex - 1;
+    onPlayNext(): void {
+        if (this.state.started) {
+            let nextIndex: number = this.getNextIndex(this.state.videoIndex, this.props.playlistData);
 
-        if (prevIndex >= 0) {
-            this.startWatchingFile(this.props.playlistData.playlist, prevIndex);
-        } else {
-            this.restartWatching(this.props.playlistData.playlist);
+            if (nextIndex < this.props.playlistData.videos.length) {
+                this.startWatchingFile(nextIndex, this.props.playlistData);
+            }
         }
     }
 
@@ -159,46 +182,52 @@ class VideoPage extends React.Component<Props, State> {
 
     render() {
         return <>
-            <h1>{this.props.playlistData.videos[this.state.videoIndex]} ({this.state.videoIndex + 1} of {this.props.playlistData.videos.length})</h1>
-            <div>
-                <div
-                    className='grayButton'
-                    onClick={() => this.props.onSetPageCatalog()}
-                >
-                    Back to list
-                </div>
+            {this.state.videoIndex < this.props.playlistData.videos.length && (
+                <h1>{this.props.playlistData.videos[this.state.videoIndex]} ({this.state.videoIndex + 1} of {this.props.playlistData.videos.length})</h1>
+            )}
+
+            {this.state.videoIndex >= this.props.playlistData.videos.length && (
+                <h1>You've watched all videos.</h1>
+            )}
+
+            <div
+                className='grayButton'
+                onClick={() => this.props.onSetPageCatalog()}
+            >
+                &lt;&lt;&lt; Back to list
+            </div>
+
+            {this.state.videoIndex < this.props.playlistData.videos.length && (
                 <div
                     className='grayButton'
                     onClick={() => this.onSetAsUnwatched()}
                 >
                     I didn't watch it
                 </div>
-            </div>
-            <div>
-                <div
-                    className='grayButton'
-                    onClick={() => this.onPlayPrev()}
-                >
-                    &lt; - Prev
-                </div>
+            )}
+
+            {! this.state.started && (
                 <div
                     className='grayButton'
                     onClick={() => this.onPlayThis()}
                 >
-                    Play
+                    Play - &gt;
                 </div>
+            )}
+            {this.state.started && (
                 <div
                     className='grayButton'
                     onClick={() => this.onPlayNext()}
                 >
                     Next - &gt;
                 </div>
-            </div>
-            <VideoPlayer
-                options={this._videoJsOptions}
-                onReady={(player: any) => this.handlePlayerReady(player)}
-
-            />
+            )}
+            {this.state.videoIndex < this.props.playlistData.videos.length && (
+                <VideoPlayer
+                    options={this._videoJsOptions}
+                    onReady={(player: any) => this.handlePlayerReady(player)}
+                />
+            )}
         </>;
     }
 }
