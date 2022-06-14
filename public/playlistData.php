@@ -2,7 +2,12 @@
     header("Access-Control-Allow-Origin: *");
     header("Access-Control-Allow-Headers: *");
     
+    $options = array(
+        'random' => 'options-random',
+    );
+    
     $ds = DIRECTORY_SEPARATOR;
+    
     $playlistData = array();
     $baseDirectory = 'video';
     $directoriesList = scandir($baseDirectory);
@@ -14,9 +19,11 @@
             ];
             if (is_dir($baseDirectory . $ds . $videosDirectory)) {
                 $filesList = scandir($baseDirectory . $ds . $videosDirectory);
-                foreach ($filesList as $videoFile) {
-                    if (strpos($videoFile, '.mp4') !== false) {
-                        $videoItem['videos'][] = $videoFile;
+                foreach ($filesList as $filename) {
+                    if (strpos($filename, '.mp4') !== false) {
+                        $videoItem['videos'][] = $filename;
+                    } else if ($filename === $options['random']) {
+                        $videoItem['options']['random'] = true;
                     }
                 }
             }
