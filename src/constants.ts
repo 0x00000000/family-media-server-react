@@ -1,4 +1,5 @@
-const BASE_URL = 'http://example.com/media-server/';
+const BASE_URL = 'http://test.saitik.net/media-server/';
+const SCRIPTS_URL = BASE_URL + 'scripts/';
 
 const URL_POSTFIXES = {
     VIDEO: 'video/',
@@ -18,6 +19,7 @@ const PAGES = {
 
 export {
     BASE_URL,
+    SCRIPTS_URL,
     URL_POSTFIXES,
     MEDIA_TYPES,
     PAGES,

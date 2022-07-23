@@ -50,6 +50,10 @@ class VideoPage extends React.Component<Props, State> {
         };
     }
 
+    componentDidMount() {
+        this.reportPlaylistFinishedIfNeeded(this.state.videoIndex);
+    }
+
     getVideoUrl(videoIndex: number) {
         if (videoIndex < this.props.playlistData.videos.length) {
             let filename: string = this.props.playlistData.videos[videoIndex];
@@ -71,7 +75,7 @@ class VideoPage extends React.Component<Props, State> {
     }
 
     getNextIndex(index: number, playlistData: PlaylistData): number {
-        if (playlistData.options && playlistData.options.random) {
+        if (playlistData?.options?.random) {
             let newIndex = Math.floor(Math.random() * (playlistData.videos.length));
             if (newIndex === index) {
                 newIndex++;
@@ -112,10 +116,8 @@ class VideoPage extends React.Component<Props, State> {
                 this._player.play();
             }
 
-            if (index === playlistData.videos.length - 1) {
-                playlistFinished(playlistData.playlist);
-            }
-
+            let indexNextTime = index + 1;
+            this.reportPlaylistFinishedIfNeeded(indexNextTime);
         }
     }
 
@@ -180,14 +182,17 @@ class VideoPage extends React.Component<Props, State> {
         });
     };
 
+    reportPlaylistFinishedIfNeeded(indexToCheck: number): void {
+        let isRandomPlaylist = this.props.playlistData?.options?.random;
+        if (indexToCheck >= this.props.playlistData.videos.length && ! isRandomPlaylist) {
+            playlistFinished(this.props.playlistData.playlist);
+        }
+    }
+
     render() {
         return <>
             {this.state.videoIndex < this.props.playlistData.videos.length && (
                 <h1>{this.props.playlistData.videos[this.state.videoIndex]} ({this.state.videoIndex + 1} of {this.props.playlistData.videos.length})</h1>
-            )}
-
-            {this.state.videoIndex >= this.props.playlistData.videos.length && (
-                <h1>You've watched all videos.</h1>
             )}
 
             <div
@@ -206,7 +211,7 @@ class VideoPage extends React.Component<Props, State> {
                 </div>
             )}
 
-            {! this.state.started && (
+            {! this.state.started && this.state.videoIndex < this.props.playlistData.videos.length && (
                 <div
                     className='grayButton'
                     onClick={() => this.onPlayThis()}
@@ -214,7 +219,7 @@ class VideoPage extends React.Component<Props, State> {
                     Play - &gt;
                 </div>
             )}
-            {this.state.started && (
+            {this.state.started && this.state.videoIndex < this.props.playlistData.videos.length && (
                 <div
                     className='grayButton'
                     onClick={() => this.onPlayNext()}
@@ -222,12 +227,20 @@ class VideoPage extends React.Component<Props, State> {
                     Next - &gt;
                 </div>
             )}
+
             {this.state.videoIndex < this.props.playlistData.videos.length && (
-                <VideoPlayer
-                    options={this._videoJsOptions}
-                    onReady={(player: any) => this.handlePlayerReady(player)}
-                />
+                <div className="videoPlayerBox">
+                    <VideoPlayer
+                        options={this._videoJsOptions}
+                        onReady={(player: any) => this.handlePlayerReady(player)}
+                    />
+                </div>
             )}
+
+            {this.state.videoIndex >= this.props.playlistData.videos.length && (
+                <h3>You've watched all videos.</h3>
+            )}
+
         </>;
     }
 }

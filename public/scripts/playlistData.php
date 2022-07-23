@@ -9,7 +9,7 @@
     $ds = DIRECTORY_SEPARATOR;
     
     $playlistData = array();
-    $baseDirectory = 'video';
+    $baseDirectory = '../video';
     $directoriesList = scandir($baseDirectory);
     foreach ($directoriesList as $videosDirectory) {
         if ($videosDirectory !== '.' && $videosDirectory !== '..') {

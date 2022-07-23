@@ -37,12 +37,12 @@ class PhotoPage extends React.Component<Props, State> {
                 className='grayButton'
                 onClick={() => this.props.onSetPageCatalog()}
             >
-                Back to list
+                &lt;&lt;&lt; Back to list
             </div>
             <Carousel>
                 {this._images.map((url: string, key:number) => (
                     <div key={key}>
-                        <img src={url} />
+                        <img src={url} alt="" />
                     </div>
                 ))}
             </Carousel>

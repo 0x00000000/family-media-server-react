@@ -4,7 +4,7 @@
     
     $ds = DIRECTORY_SEPARATOR;
     $photoalbumData = array();
-    $baseDirectory = 'photo';
+    $baseDirectory = '../photo';
     $directoriesList = scandir($baseDirectory);
     foreach ($directoriesList as $photosDirectory) {
         if ($photosDirectory !== '.' && $photosDirectory !== '..') {

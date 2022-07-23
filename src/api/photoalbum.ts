@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BASE_URL } from '../constants';
+import { SCRIPTS_URL } from '../constants';
 
 const ENDPOINT = 'photoalbumData.php';
 
@@ -14,6 +14,6 @@ type PlaylistDataResponse = {
 
 export const loadPhotoalbumDataList = (): Promise<PhotoalbumData[]> =>
     axios
-        .get(BASE_URL + ENDPOINT)
+        .get(SCRIPTS_URL + ENDPOINT)
         .then((res: PlaylistDataResponse) => res.data)
         .catch(err => Promise.reject(err.response.data));

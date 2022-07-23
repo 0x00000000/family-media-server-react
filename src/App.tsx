@@ -24,9 +24,25 @@ class App extends React.Component<Props, State> {
         };
     }
 
+    componentWillMount() {
+        this.onResize();
+    }
+
     componentDidMount() {
         this.loadPlaylistDataList();
         this.loadPhotoalbumDataList();
+        window.addEventListener("resize", this.onResize);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.onResize);
+    }
+
+    onResize() {
+        let width: number = Math.max(document.documentElement.clientWidth, document.body.clientWidth);
+        let height: number = Math.max(document.documentElement.clientHeight, document.body.clientHeight);
+        let bodyMaxWidth = Math.min(width, height);
+        document.body.style.maxWidth = String(bodyMaxWidth) + 'px';
     }
 
     loadPlaylistDataList = async() => {

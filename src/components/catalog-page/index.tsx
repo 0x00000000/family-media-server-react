@@ -13,9 +13,6 @@ type Props = {
 type State = {};
 
 class CatalogPage extends React.Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-    }
 
     render() {
         return <>

@@ -2,9 +2,6 @@ class StorageModel {
     _key: string = 'familyMediaServer';
     _lifeTimeMilliseconds: number = 2592000000;
 
-    constructor() {
-    }
-
     get(section: string): object {
         const storageData: any = this.getStorageData();
         if (section in storageData) {

@@ -23,7 +23,7 @@ class MediaStatisticModel {
     safeGetWatchedList(data: any): WatchedData[] {
         let watchedList: WatchedData[] = [];
         if (data && Array.isArray(data)) {
-            data.map((item: any) => {
+            data.forEach((item: any) => {
                 if (item.directory && item.filename) {
                     watchedList.push({directory: item.directory, filename: item.filename});
                 }
