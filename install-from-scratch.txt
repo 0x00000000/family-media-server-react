@@ -1,0 +1,8 @@
+I used next commands to create this application
+$ npx create-react-app media-server --template typescript
+$ npm install --save-dev axios
+$ npm install --save-dev react-responsive-carousel
+$ npm install --save-dev video.js
+$ npm install --save-dev ts-jest
+$ npm install --save-dev @types/jsdom
+

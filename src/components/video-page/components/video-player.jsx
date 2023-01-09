@@ -1,6 +1,6 @@
 import React from 'react';
-
 import videojs from 'video.js';
+
 import 'video.js/dist/video-js.css';
 
 class VideoPlayer extends React.Component {
@@ -26,9 +26,9 @@ class VideoPlayer extends React.Component {
     }
 
     componentWillUnmount() {
-        // if (this.player) {
-        //     this.player.dispose();
-        // }
+        if (this.player) {
+            this.player.dispose();
+        }
     }
 
     // wrap the player in a div with a `data-vjs-player` attribute

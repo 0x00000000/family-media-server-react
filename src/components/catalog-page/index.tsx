@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { PlaylistData } from '../../api/playlist';
-import { PhotoalbumData } from '../../api/photoalbum';
+import { PlaylistData } from '../../types/playlist-data';
+import { PhotoalbumData } from '../../types/photoalbum-data';
 
 type Props = {
     playlistDataList: PlaylistData[];
@@ -13,7 +13,6 @@ type Props = {
 type State = {};
 
 class CatalogPage extends React.Component<Props, State> {
-
     render() {
         return <>
             <h1>Select playlist</h1>

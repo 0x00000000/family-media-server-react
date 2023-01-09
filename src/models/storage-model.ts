@@ -1,8 +1,13 @@
-class StorageModel {
-    _key: string = 'familyMediaServer';
-    _lifeTimeMilliseconds: number = 2592000000;
+import DataProvider from '../data-providers/data-provider';
 
-    get(section: string): object {
+class StorageModel {
+    _dataProvider: DataProvider;
+
+    constructor(dataProvider: DataProvider) {
+        this._dataProvider = dataProvider;
+    }
+
+    public get(section: string): object {
         const storageData: any = this.getStorageData();
         if (section in storageData) {
             return storageData[section];
@@ -11,28 +16,19 @@ class StorageModel {
         }
     }
 
-    set(section: string, data: object) {
+    public set(section: string, data: object) {
         const storageData: any = this.getStorageData();
         storageData[section] = data;
         this.setStorageData(storageData);
     }
 
-    setStorageData(data: any): void {
-        var d = new Date();
-        d.setTime(d.getTime() + this._lifeTimeMilliseconds);
-        var expires = 'expires=' + d.toUTCString();
-        document.cookie = this._key + '=' + JSON.stringify(data) + "; " + expires;
+    public setStorageData(data: any): void {
+        this._dataProvider.setData(data);
     }
 
-    getStorageData(): any {
-        let match: any = document.cookie.match(new RegExp('(^| )' + this._key + '=([^;]+)'));
-        if (match && match[2]) {
-            return JSON.parse(match[2]);
-        } else {
-            return {};
-        }
+    public getStorageData(): any {
+        return this._dataProvider.getData();
     }
-
 }
 
 export default StorageModel;

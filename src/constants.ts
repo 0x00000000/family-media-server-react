@@ -1,4 +1,4 @@
-const BASE_URL = 'http://test.saitik.net/media-server/';
+const BASE_URL = 'http://your-domain.com/media-server/';
 const SCRIPTS_URL = BASE_URL + 'scripts/';
 
 const URL_POSTFIXES = {

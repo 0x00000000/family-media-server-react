@@ -1,10 +1,13 @@
 import React from 'react';
-import './App.css';
-
-import { loadPlaylistDataList, PlaylistData } from './api/playlist';
-import { loadPhotoalbumDataList, PhotoalbumData } from './api/photoalbum';
 
 import PageController from "./components/page-controller";
+import { PlaylistData } from "./types/playlist-data";
+import { PhotoalbumData } from "./types/photoalbum-data";
+import ApplicationSizeHelper from "./helpers/application-size-helper";
+import loadPlaylistData from './api/load-playlist-data';
+import loadPhotoalbumData from './api/load-photoalbum-data';
+
+import './App.css';
 
 type Props = {};
 
@@ -24,51 +27,14 @@ class App extends React.Component<Props, State> {
         };
     }
 
-    componentWillMount() {
-        this.onResize();
-    }
-
     componentDidMount() {
-        this.loadPlaylistDataList();
-        this.loadPhotoalbumDataList();
+        this.loadPlaylistData();
+        this.loadPhotoalbumData();
         window.addEventListener("resize", this.onResize);
     }
 
     componentWillUnmount() {
         window.removeEventListener("resize", this.onResize);
-    }
-
-    onResize() {
-        let width: number = Math.max(document.documentElement.clientWidth, document.body.clientWidth);
-        let height: number = Math.max(document.documentElement.clientHeight, document.body.clientHeight);
-        let bodyMaxWidth = Math.min(width, height);
-        document.body.style.maxWidth = String(bodyMaxWidth) + 'px';
-    }
-
-    loadPlaylistDataList = async() => {
-        try {
-            const playlistDataList: PlaylistData[] = await loadPlaylistDataList();
-            this.setState(state => ({
-                ...state,
-                playlistDataList: playlistDataList,
-            }));
-        } catch (err) {
-            console.log('Error', err);
-        } finally {
-        }
-    }
-
-    loadPhotoalbumDataList = async() => {
-        try {
-            const photoalbumDataList: PhotoalbumData[] = await loadPhotoalbumDataList();
-            this.setState(state => ({
-                ...state,
-                photoalbumDataList: photoalbumDataList,
-            }));
-        } catch (err) {
-            console.log('Error', err);
-        } finally {
-        }
     }
 
     render() {
@@ -82,5 +48,35 @@ class App extends React.Component<Props, State> {
         );
     }
 
+    private onResize() {
+        const bodyMaxWidth = (new ApplicationSizeHelper(window.document)).getApplicationWidth();
+        document.body.style.maxWidth = String(bodyMaxWidth) + 'px';
+    }
+
+    private loadPlaylistData = async() => {
+        try {
+            const playlistDataList: PlaylistData[] = await loadPlaylistData();
+            this.setState(state => ({
+                ...state,
+                playlistDataList: playlistDataList,
+            }));
+        } catch (err) {
+            console.log('Error loading playlist data', err);
+        } finally {
+        }
+    }
+
+    private loadPhotoalbumData = async() => {
+        try {
+            const photoalbumDataList: PhotoalbumData[] = await loadPhotoalbumData();
+            this.setState(state => ({
+                ...state,
+                photoalbumDataList: photoalbumDataList,
+            }));
+        } catch (err) {
+            console.log('Error loading photoalbum data', err);
+        } finally {
+        }
+    }
 }
 export default App;

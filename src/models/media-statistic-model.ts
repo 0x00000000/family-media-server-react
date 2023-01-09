@@ -1,3 +1,4 @@
+import DataProvider from '../data-providers/data-provider';
 import StorageModel from './storage-model';
 
 type WatchedData = {
@@ -8,19 +9,22 @@ type WatchedData = {
 class MediaStatisticModel {
     _type: string = '';
     _historyLength: number = 100;
-    _storage: StorageModel = new StorageModel();
+    _dataProvider: DataProvider;
+    _storage: StorageModel;
     _watchedList: WatchedData[] = [];
 
-    constructor(type: string) {
+    constructor(type: string, dataProvider: DataProvider) {
+        this._dataProvider = dataProvider;
+        this._storage = new StorageModel(this._dataProvider)
         this.init(type);
     }
 
-    init(type: string) {
+    private init(type: string) {
         this._type = type;
         this._watchedList = this.safeGetWatchedList(this._storage.get(this._type));
     }
 
-    safeGetWatchedList(data: any): WatchedData[] {
+    public safeGetWatchedList(data: any): WatchedData[] {
         let watchedList: WatchedData[] = [];
         if (data && Array.isArray(data)) {
             data.forEach((item: any) => {
@@ -32,7 +36,7 @@ class MediaStatisticModel {
         return watchedList;
     }
 
-    getWatchedFile(directory: string): string {
+    public getWatchedFile(directory: string): string {
         let watched: WatchedData | undefined = this._watchedList.find((watched: WatchedData) => (watched.directory === directory));
         if (! watched) {
             return '';
@@ -41,7 +45,7 @@ class MediaStatisticModel {
         }
     }
 
-    addWatchedFile(directory: string, filename: string): void {
+    public addWatchedFile(directory: string, filename: string): void {
         let index: number = this._watchedList.findIndex((watched: WatchedData) => (watched.directory === directory));
         if (index !== -1) {
             this._watchedList.splice(index, 1);
@@ -53,7 +57,6 @@ class MediaStatisticModel {
         }
         this._storage.set(this._type, this._watchedList);
     }
-
 }
 
 export default MediaStatisticModel;

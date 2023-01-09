@@ -1,11 +1,10 @@
 import React from 'react';
-import { PhotoalbumData } from '../../api/photoalbum';
-
-import { BASE_URL, URL_POSTFIXES } from '../../constants';
-
 import { Carousel } from 'react-responsive-carousel';
 
-import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { PhotoalbumData } from '../../types/photoalbum-data';
+import { BASE_URL, URL_POSTFIXES } from '../../constants';
+
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 type Props = {
     photoalbumData: PhotoalbumData;
@@ -21,14 +20,6 @@ class PhotoPage extends React.Component<Props, State> {
         super(props);
 
         this._images = this.getImagesList(this.props.photoalbumData);
-    }
-
-    getImagesList(photoalbumData: PhotoalbumData) {
-        let images: string[] = photoalbumData.photos.map(
-            (filename: string) =>
-                BASE_URL + URL_POSTFIXES.PHOTO + photoalbumData.photoalbum + '/' + filename
-        );
-        return images;
     }
 
     render() {
@@ -49,6 +40,13 @@ class PhotoPage extends React.Component<Props, State> {
         </>;
     }
 
+    private getImagesList(photoalbumData: PhotoalbumData) {
+        let images: string[] = photoalbumData.photos.map(
+            (filename: string) =>
+                BASE_URL + URL_POSTFIXES.PHOTO + photoalbumData.photoalbum + '/' + filename
+        );
+        return images;
+    }
 }
 
 export default PhotoPage;
