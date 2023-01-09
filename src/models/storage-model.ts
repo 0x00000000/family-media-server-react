@@ -22,11 +22,11 @@ class StorageModel {
         this.setStorageData(storageData);
     }
 
-    public setStorageData(data: any): void {
+    private setStorageData(data: any): void {
         this._dataProvider.setData(data);
     }
 
-    public getStorageData(): any {
+    private getStorageData(): any {
         return this._dataProvider.getData();
     }
 }
