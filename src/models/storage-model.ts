@@ -1,7 +1,7 @@
 import DataProvider from '../data-providers/data-provider';
 
 class StorageModel {
-    _dataProvider: DataProvider;
+    private _dataProvider: DataProvider;
 
     constructor(dataProvider: DataProvider) {
         this._dataProvider = dataProvider;

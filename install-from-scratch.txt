@@ -5,4 +5,5 @@ $ npm install --save-dev react-responsive-carousel
 $ npm install --save-dev video.js
 $ npm install --save-dev ts-jest
 $ npm install --save-dev @types/jsdom
+$ npx ts-jest config:init
 

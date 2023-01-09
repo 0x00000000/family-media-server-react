@@ -7,11 +7,11 @@ type WatchedData = {
 }
 
 class MediaStatisticModel {
-    _type: string = '';
-    _historyLength: number = 100;
-    _dataProvider: DataProvider;
-    _storage: StorageModel;
-    _watchedList: WatchedData[] = [];
+    private _type: string = '';
+    private _historyLength: number = 100;
+    private _dataProvider: DataProvider;
+    private _storage: StorageModel;
+    private _watchedList: WatchedData[] = [];
 
     constructor(type: string, dataProvider: DataProvider) {
         this._dataProvider = dataProvider;
