@@ -69,4 +69,3 @@ describe('MediaStatisticModel', () => {
         expect(statistic2.getWatchedFile(testData[0].directory)).toBe('');
     });
 });
-export {};

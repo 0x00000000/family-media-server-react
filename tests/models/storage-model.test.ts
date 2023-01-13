@@ -53,5 +53,3 @@ describe('StorageModel', () => {
         expect(storageModel.get(section3)).not.toEqual(data2);
     });
 });
-
-export{};
