@@ -8,7 +8,6 @@ class VideoPlayer extends React.Component {
         // Make sure Video.js player is only initialized once
         if (! this.player) {
             this.player = videojs(this.videoNode, this.props.options, () => {
-                console.log('onPlayerReady', this);
                 this.props.onReady && this.props.onReady(this.player);
             });
 
