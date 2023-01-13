@@ -31,6 +31,7 @@ class App extends React.Component<Props, State> {
         this.loadPlaylistData();
         this.loadPhotoalbumData();
         window.addEventListener("resize", this.onResize);
+        this.onResize();
     }
 
     componentWillUnmount() {

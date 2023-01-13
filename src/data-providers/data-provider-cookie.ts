@@ -23,10 +23,10 @@ class DataProviderCookie implements DataProvider {
     }
 
     public setData(data: any): void {
-        var d = new Date();
+        let d = new Date();
         d.setTime(d.getTime() + this._lifeTimeMilliseconds);
-        var expires = 'expires=' + d.toUTCString();
-        this._document.cookie = this._key + '=' + JSON.stringify(data) + "; " + expires;
+        let expires = 'expires=' + d.toUTCString();
+        this._document.cookie = this._key + '=' + JSON.stringify(data) + ';' + expires + ';SameSite=Lax';
     }
 
     public getData(): any {
